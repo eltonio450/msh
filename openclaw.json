@@ -17,6 +17,12 @@
       "thinkingDefault": "high"
     }
   },
+  "tools": {
+    "exec": {
+      "security": "full",
+      "ask": "off"
+    }
+  },
   "channels": {
     "whatsapp": {
       "dmPolicy": "allowlist",
