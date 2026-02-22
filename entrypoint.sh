@@ -27,6 +27,13 @@ if [ ! -d "$WORKSPACE_DIR/.git" ]; then
   git remote add origin "https://github.com/eltonio450/msh.git"
 fi
 
+# --- Exec approvals: auto-approve all (no prompts) ---
+if [ ! -f "$STATE_DIR/exec-approvals.json" ]; then
+  cat > "$STATE_DIR/exec-approvals.json" << 'EOF'
+{"security":"full","ask":"off","askFallback":"full"}
+EOF
+fi
+
 echo "[entrypoint] ready"
 
 export PORT="${PORT:-8080}"
