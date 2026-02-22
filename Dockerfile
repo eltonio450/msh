@@ -42,7 +42,8 @@ RUN printf '%s\n' '#!/usr/bin/env bash' 'exec node /openclaw/dist/entry.js "$@"'
 WORKDIR /app
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
-COPY openclaw.json ./openclaw.json
+COPY openclaw.json AGENTS.md ./
+COPY skills/ ./skills/
 
 EXPOSE 8080
 CMD ["./entrypoint.sh"]
