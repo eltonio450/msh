@@ -30,7 +30,7 @@ fi
 # --- Exec approvals: auto-approve all (no prompts) ---
 if [ ! -f "$STATE_DIR/exec-approvals.json" ]; then
   cat > "$STATE_DIR/exec-approvals.json" << 'EOF'
-{"security":"full","ask":"off","askFallback":"full"}
+{"version":1,"defaults":{"security":"full","ask":"off","askFallback":"full"}}
 EOF
 fi
 
