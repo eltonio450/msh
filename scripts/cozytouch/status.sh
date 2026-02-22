@@ -13,52 +13,54 @@ cozy_login
 
 setup=$(cozy_get "setup")
 
+# Build a place OID → name mapping from the recursive rootPlace structure
+places_map=$(echo "$setup" | jq '[.rootPlace | recurse(.subPlaces[]?) | {key: .oid, value: .label}] | from_entries')
+
 if $JSON_OUTPUT; then
-  echo "$setup" | jq '{
-    gateways: [.gateways[] | {id: .gatewayId, alive: .alive, version: .connectivity.protocolVersion}],
-    devices: [.devices[] | {
-      url: .deviceURL,
-      label: .label,
-      widget: .widget,
-      available: .available,
-      states: [.states[] | {name: .name, value: .value}]
-    }]
-  }'
+  echo "$setup" | jq --argjson places "$places_map" '
+    {
+      gateways: [.gateways[] | {id: .gatewayId, alive: .alive, version: .connectivity.protocolVersion}],
+      heaters: [.devices[] |
+        select(.widget == "AtlanticElectricalHeaterWithAdjustableTemperatureSetpoint") |
+        {
+          url: .deviceURL,
+          place: ($places[.placeOID] // "unknown"),
+          mode: (.states[] | select(.name == "core:OperatingModeState") | .value),
+          on: (.states[] | select(.name == "core:OnOffState") | .value),
+          target_temp: (.states[] | select(.name == "core:TargetTemperatureState") | .value),
+          comfort_temp: (.states[] | select(.name == "core:ComfortRoomTemperatureState") | .value),
+          eco_temp: (.states[] | select(.name == "core:EcoRoomTemperatureState") | .value)
+        }
+      ],
+      temperatures: [.devices[] |
+        select(.widget == "TemperatureSensor") |
+        {
+          url: .deviceURL,
+          place: ($places[.placeOID] // "unknown"),
+          current_temp: (.states[] | select(.name == "core:TemperatureState") | .value)
+        }
+      ]
+    }'
   exit 0
 fi
 
-echo "=== Gateways ==="
-echo "$setup" | jq -r '.gateways[] | "  \(.gatewayId) — alive: \(.alive), version: \(.connectivity.protocolVersion)"'
-
-echo ""
-echo "=== Devices ==="
-echo "$setup" | jq -r '.devices[] | select(.widget != "TemperatureSensor" and .widget != "OccupancySensor" and .widget != "ContactSensor" and .widget != "CumulativeElectricPowerConsumptionSensor") |
-  "  [\(.widget)] \(.label // "unnamed")\n    URL: \(.deviceURL)\n    States:"'
-
-echo "$setup" | jq -r '
+echo "=== Radiateurs ==="
+echo "$setup" | jq -r --argjson places "$places_map" '
+  # Build temp sensor lookup: base device ID → temperature
+  ([.devices[] | select(.widget == "TemperatureSensor") |
+    {key: (.deviceURL | split("#")[0]), value: (.states[] | select(.name == "core:TemperatureState") | .value)}
+  ] | from_entries) as $temps |
   .devices[] |
-  select(.widget != "TemperatureSensor" and .widget != "OccupancySensor" and .widget != "ContactSensor" and .widget != "CumulativeElectricPowerConsumptionSensor") |
-  . as $dev |
-  "--- \($dev.label // $dev.deviceURL) (\($dev.widget)) ---",
-  (.states[] |
-    select(
-      .name == "core:TargetTemperatureState" or
-      .name == "core:ComfortRoomTemperatureState" or
-      .name == "core:EcoRoomTemperatureState" or
-      .name == "core:TemperatureState" or
-      .name == "core:OnOffState" or
-      .name == "core:OperatingModeState" or
-      .name == "io:TargetHeatingLevelState" or
-      .name == "core:HeatingStatusState" or
-      .name == "core:HolidaysModeState"
-    ) | "    \(.name): \(.value)"
-  ),
-  ""
+  select(.widget == "AtlanticElectricalHeaterWithAdjustableTemperatureSetpoint") |
+  (.deviceURL | split("#")[0]) as $base |
+  ($places[.placeOID] // "?") as $place |
+  (.states[] | select(.name == "core:OnOffState") | .value) as $on |
+  (.states[] | select(.name == "core:OperatingModeState") | .value) as $mode |
+  (.states[] | select(.name == "core:TargetTemperatureState") | .value) as $target |
+  ($temps[$base] // "N/A") as $current |
+  "  \($place): \($current)°C → \($target)°C  [\($mode), \($on)]  \(.deviceURL)"
 '
 
 echo ""
-echo "=== Temperature Sensors ==="
-echo "$setup" | jq -r '
-  .devices[] | select(.widget == "TemperatureSensor") |
-  "  \(.label // .deviceURL): \((.states[] | select(.name == "core:TemperatureState") | .value) // "N/A")°C"
-'
+echo "=== Gateway ==="
+echo "$setup" | jq -r '.gateways[] | "  \(.gatewayId) — alive: \(.alive), version: \(.connectivity.protocolVersion)"'

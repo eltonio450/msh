@@ -7,7 +7,7 @@ description: Contrôler un poêle à granulés MCZ via l'API cloud Maestro. Util
 
 Contrôle du poêle à granulés MCZ via l'API cloud Maestro (même API que
 l'appli officielle). Fonctionne depuis n'importe où, pas besoin d'être sur
-le réseau WiFi du poêle.
+le réseau WiFi du poêle. Zéro dépendance externe (Node 18+ fetch natif).
 
 ## Prérequis
 
@@ -15,16 +15,9 @@ Variables d'environnement (Railway) :
 - `MCZ_USERNAME` – email du compte MCZ
 - `MCZ_PASSWORD` – mot de passe du compte MCZ
 
-Dépendance : `aiohttp` (voir `scripts/requirements.txt`).
-
-Installer si nécessaire :
-```bash
-pip install -r skills/mcz-stove/scripts/requirements.txt
-```
-
 ## Script CLI
 
-Le script `scripts/mcz_cloud.py` est le point d'entrée unique.
+Le script `scripts/mcz_cloud.mjs` est le point d'entrée unique.
 
 ### Commandes
 
@@ -48,22 +41,22 @@ Le script `scripts/mcz_cloud.py` est le point d'entrée unique.
 
 ```bash
 # Voir l'état du poêle
-python skills/mcz-stove/scripts/mcz_cloud.py status
+node skills/mcz-stove/scripts/mcz_cloud.mjs status
 
 # Allumer
-python skills/mcz-stove/scripts/mcz_cloud.py power on
+node skills/mcz-stove/scripts/mcz_cloud.mjs power on
 
 # Régler à 22°C
-python skills/mcz-stove/scripts/mcz_cloud.py temp 22
+node skills/mcz-stove/scripts/mcz_cloud.mjs temp 22
 
 # Mode silencieux
-python skills/mcz-stove/scripts/mcz_cloud.py silent on
+node skills/mcz-stove/scripts/mcz_cloud.mjs silent on
 
 # Changer le mode
-python skills/mcz-stove/scripts/mcz_cloud.py mode dynamic
+node skills/mcz-stove/scripts/mcz_cloud.mjs mode dynamic
 
 # Ventilateur en auto
-python skills/mcz-stove/scripts/mcz_cloud.py fan 6
+node skills/mcz-stove/scripts/mcz_cloud.mjs fan 6
 ```
 
 ## Workflow
@@ -85,10 +78,3 @@ python skills/mcz-stove/scripts/mcz_cloud.py fan 6
 Si `info` ne trouve pas un capteur attendu, c'est que le modèle de poêle
 ne le supporte pas. Utiliser `raw-state` et `raw-status` pour explorer
 les données brutes et adapter.
-
-## Approche alternative : WebSocket local
-
-Pour un contrôle local (sans passer par le cloud MCZ), le poêle expose un
-WebSocket sur `192.168.120.1:81`. Cela nécessite un appareil (ex: Raspberry Pi)
-connecté au WiFi du poêle. Voir le projet
-[maestrogateway](https://github.com/Chibald/maestrogateway) pour cette approche.

@@ -32,8 +32,6 @@ ENV NODE_ENV=production
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates curl git procps openssh-server jq \
-    python3 python3-pip python3-venv \
-  && python3 -m pip install --break-system-packages aiohttp \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /openclaw /openclaw
