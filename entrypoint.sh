@@ -21,9 +21,8 @@ if [ -f /app/openclaw.json ]; then
   fi
 fi
 
-PORT="${PORT:-8080}"
+export PORT="${PORT:-8080}"
+export OPENCLAW_STATE_DIR="$STATE_DIR"
+export OPENCLAW_WORKSPACE_DIR="$WORKSPACE_DIR"
 
-exec openclaw gateway start \
-  --bind lan \
-  --port "$PORT" \
-  --allow-unconfigured
+exec node /openclaw/dist/index.js --allow-unconfigured
