@@ -10,7 +10,11 @@
   },
   "agents": {
     "defaults": {
-      "workspace": "${OPENCLAW_WORKSPACE_DIR}"
+      "workspace": "${OPENCLAW_WORKSPACE_DIR}",
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-6"
+      },
+      "thinkingDefault": "high"
     }
   },
   "channels": {
