@@ -17,6 +17,14 @@
       "thinkingDefault": "high"
     }
   },
+  "session": {
+    "dmScope": "per-channel-peer",
+    "reset": {
+      "mode": "daily",
+      "atHour": 4,
+      "idleMinutes": 120
+    }
+  },
   "tools": {
     "exec": {
       "security": "full",
