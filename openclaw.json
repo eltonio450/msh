@@ -1,0 +1,6 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/openclaw.json",
+  "gateway": {
+    "port": 18789
+  }
+}
