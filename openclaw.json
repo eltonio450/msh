@@ -1,6 +1,7 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/openclaw.json",
   "gateway": {
+    "mode": "local",
     "port": 8080,
     "bind": "lan",
     "auth": {
@@ -10,6 +11,16 @@
   "agents": {
     "defaults": {
       "workspace": "${OPENCLAW_WORKSPACE_DIR}"
+    }
+  },
+  "channels": {
+    "whatsapp": {
+      "dmPolicy": "allowlist",
+      "allowFrom": ["${WHATSAPP_ALLOW_FROM}"],
+      "groupPolicy": "disabled",
+      "configWrites": false,
+      "sendReadReceipts": false,
+      "mediaMaxMb": 5
     }
   }
 }
