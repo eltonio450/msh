@@ -4,28 +4,34 @@ set -euo pipefail
 STATE_DIR="${OPENCLAW_STATE_DIR:-/data/.openclaw}"
 WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-/data/workspace}"
 
-mkdir -p "$STATE_DIR" "$WORKSPACE_DIR"
+mkdir -p "$STATE_DIR"
 
-# --- Sync repo → instance (repo is source of truth) ---
-
-# Gateway config
-if [ -f /app/openclaw.json ]; then
-  cp /app/openclaw.json "$STATE_DIR/openclaw.json"
-  echo "[sync] openclaw.json → $STATE_DIR/"
+# --- Git auth (for agent self-edit) ---
+if [ -n "${GITHUB_TOKEN:-}" ]; then
+  git config --global credential.helper store
+  echo "https://x-access-token:${GITHUB_TOKEN}@github.com" > ~/.git-credentials
+  chmod 600 ~/.git-credentials
 fi
 
-# Agent system prompt
-if [ -f /app/AGENTS.md ]; then
-  cp /app/AGENTS.md "$WORKSPACE_DIR/AGENTS.md"
-  echo "[sync] AGENTS.md → $WORKSPACE_DIR/"
+git config --global user.name "msh"
+git config --global user.email "msh@openclaw.gateway"
+
+# --- Sync repo → workspace via git clone/pull ---
+REPO_URL="https://github.com/eltonio450/msh.git"
+
+if [ -d "$WORKSPACE_DIR/.git" ]; then
+  echo "[sync] Pulling latest from repo into workspace"
+  cd "$WORKSPACE_DIR"
+  git fetch origin main --depth 1
+  git reset --hard origin/main
+else
+  echo "[sync] Cloning repo into workspace"
+  git clone --depth 1 "$REPO_URL" "$WORKSPACE_DIR"
 fi
 
-# Skills (workspace skills have highest precedence in OpenClaw)
-if [ -d /app/skills ]; then
-  mkdir -p "$WORKSPACE_DIR/skills"
-  cp -r /app/skills/. "$WORKSPACE_DIR/skills/"
-  echo "[sync] skills/ → $WORKSPACE_DIR/skills/"
-fi
+# --- Sync gateway config (separate from workspace) ---
+cp "$WORKSPACE_DIR/openclaw.json" "$STATE_DIR/openclaw.json"
+echo "[sync] openclaw.json → $STATE_DIR/"
 
 # --------------------------------------------------
 
