@@ -29,7 +29,7 @@
         "bot": {
           "dmPolicy": "disabled",
           "groupPolicy": "allowlist",
-          "groupAllowFrom": ["${WHATSAPP_ALLOW_FROM}"]
+          "groupAllowFrom": ["${WHATSAPP_ALLOW_FROM}", "+33768488243"]
         }
       }
     }
