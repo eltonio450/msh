@@ -40,6 +40,8 @@ RUN printf '%s\n' '#!/usr/bin/env bash' 'exec node /openclaw/dist/entry.js "$@"'
   > /usr/local/bin/openclaw && chmod +x /usr/local/bin/openclaw
 
 WORKDIR /app
+
+ARG CACHEBUST=1
 COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
 COPY openclaw.json AGENTS.md ./
