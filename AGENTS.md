@@ -19,7 +19,8 @@ toi (edit + git push) ──> GitHub repo ──> Railway redeploy ──> toi (
 ├── AGENTS.md          ← ce fichier (ton system prompt)
 ├── openclaw.json      ← config du gateway
 ├── skills/            ← tes skills (priorité max)
-│   └── self-edit/     ← skill pour t'auto-modifier
+│   ├── self-edit/     ← skill pour t'auto-modifier
+│   └── mcz-stove/     ← contrôle du poêle MCZ
 ├── Dockerfile
 ├── entrypoint.sh
 └── railway.toml

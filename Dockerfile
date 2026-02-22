@@ -31,7 +31,7 @@ ENV NODE_ENV=production
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    ca-certificates curl git procps openssh-server \
+    ca-certificates curl git procps openssh-server jq \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /openclaw /openclaw
