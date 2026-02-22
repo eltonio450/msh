@@ -33,7 +33,8 @@
       "mediaMaxMb": 5,
       "accounts": {
         "bot": {
-          "dmPolicy": "disabled",
+          "dmPolicy": "allowlist",
+          "allowFrom": ["${WHATSAPP_ALLOW_FROM}", "+33768488243"],
           "groupPolicy": "allowlist",
           "groupAllowFrom": ["${WHATSAPP_ALLOW_FROM}", "+33768488243"]
         }
