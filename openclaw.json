@@ -24,7 +24,14 @@
       "groupPolicy": "disabled",
       "configWrites": false,
       "sendReadReceipts": false,
-      "mediaMaxMb": 5
+      "mediaMaxMb": 5,
+      "accounts": {
+        "bot": {
+          "dmPolicy": "disabled",
+          "groupPolicy": "allowlist",
+          "groupAllowFrom": ["${WHATSAPP_ALLOW_FROM}"]
+        }
+      }
     }
   }
 }
