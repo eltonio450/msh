@@ -25,4 +25,4 @@ export PORT="${PORT:-8080}"
 export OPENCLAW_STATE_DIR="$STATE_DIR"
 export OPENCLAW_WORKSPACE_DIR="$WORKSPACE_DIR"
 
-exec node /openclaw/dist/index.js --allow-unconfigured
+exec node /openclaw/dist/index.js
