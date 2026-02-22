@@ -14,7 +14,11 @@
       "model": {
         "primary": "anthropic/claude-sonnet-4-6"
       },
-      "thinkingDefault": "high"
+      "thinkingDefault": "high",
+      "execApprovals": {
+        "security": "full",
+        "ask": "off"
+      }
     }
   },
   "channels": {
