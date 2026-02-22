@@ -4,7 +4,8 @@ builder = "dockerfile"
 [deploy]
 healthcheckPath = "/"
 healthcheckTimeout = 300
-restartPolicyType = "on_failure"
+restartPolicyType = "never"
+restartPolicyMaxRetries = 0
 
 [variables]
 PORT = "8080"

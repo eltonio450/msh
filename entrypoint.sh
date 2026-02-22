@@ -16,20 +16,25 @@ fi
 git config --global user.name "msh"
 git config --global user.email "msh@openclaw.gateway"
 
-# --- Sync repo → workspace via git clone/pull ---
+# --- Sync repo → workspace via git ---
 REPO_URL="https://github.com/eltonio450/msh.git"
 
 if [ -d "$WORKSPACE_DIR/.git" ]; then
-  echo "[sync] Pulling latest from repo into workspace"
+  echo "[sync] Pulling latest into workspace"
   cd "$WORKSPACE_DIR"
   git fetch origin main --depth 1
   git reset --hard origin/main
 else
+  # Workspace exists but isn't a git repo (leftover from previous deploys)
+  if [ -d "$WORKSPACE_DIR" ] && [ "$(ls -A "$WORKSPACE_DIR" 2>/dev/null)" ]; then
+    echo "[sync] Workspace not empty and not a git repo — reinitializing"
+    rm -rf "$WORKSPACE_DIR"
+  fi
   echo "[sync] Cloning repo into workspace"
   git clone --depth 1 "$REPO_URL" "$WORKSPACE_DIR"
 fi
 
-# --- Sync gateway config (separate from workspace) ---
+# --- Sync gateway config ---
 cp "$WORKSPACE_DIR/openclaw.json" "$STATE_DIR/openclaw.json"
 echo "[sync] openclaw.json → $STATE_DIR/"
 
