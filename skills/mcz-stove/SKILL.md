@@ -33,8 +33,10 @@ Le script `scripts/mcz_cloud.py` est le point d'entrée unique.
 | `status` | État actuel (température, puissance, modes) |
 | `power on` | Allumer le poêle |
 | `power off` | Éteindre le poêle |
-| `temp <valeur>` | Régler la température cible (ex: `temp 21.5`) |
+| `temp <valeur>` | Régler la température cible (ex: `temp 21.5`, range 5-35) |
 | `power-level <1-5>` | Régler le niveau de puissance |
+| `mode <mode>` | Changer le mode : `manual`, `dynamic`, `comfort`, `overnight`, `power` |
+| `fan <0-6>` | Vitesse ventilateur (0-5, 6=auto) |
 | `silent on\|off` | Activer/désactiver le mode silencieux |
 | `eco on\|off` | Activer/désactiver le mode éco |
 | `chrono on\|off` | Activer/désactiver le chronostat |
@@ -56,6 +58,12 @@ python skills/mcz-stove/scripts/mcz_cloud.py temp 22
 
 # Mode silencieux
 python skills/mcz-stove/scripts/mcz_cloud.py silent on
+
+# Changer le mode
+python skills/mcz-stove/scripts/mcz_cloud.py mode dynamic
+
+# Ventilateur en auto
+python skills/mcz-stove/scripts/mcz_cloud.py fan 6
 ```
 
 ## Workflow
