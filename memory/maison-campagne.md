@@ -14,6 +14,16 @@ les travaux en cours, etc. Dites-moi "on est à la maison de campagne" et je cha
 
 - Sopalin
 
+## Marché
+
+- 12 radis blanc et rouge
+- Persil
+- Roquette
+- Épinards (25g)
+- Pignons de pin
+- Citron
+- Flétan
+
 ## Travaux / réparations
 
 _(vide)_
